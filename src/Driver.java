@@ -1,15 +1,14 @@
-import javafx.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class Driver extends Application{
-
+	@Override
 	public void start(Stage stage) throws Exception {
-		stage.setTitle("Boggle");
 		Button btn = new Button();
 		
 		btn.setText("Click bait");
@@ -24,6 +23,13 @@ public class Driver extends Application{
 		});
 		
 		StackPane root = new StackPane();
+		root.getChildren().add(btn);
+		
+		Scene scene = new Scene(root, 600, 800);
+		
+		stage.setTitle("Boggle");
+		stage.setScene(scene);
+		stage.show();
 	}
 	
 	public static void main(String[] args){
