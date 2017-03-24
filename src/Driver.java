@@ -120,7 +120,7 @@ public class Driver extends Application{
 		ObservableList<Node> c = gp.getChildren();
 		ArrayList<Node> deliverable = new ArrayList<Node>();
 		for(Node n : c){
-			if((((Button)n).getText().toUpperCase().equals(text.toUpperCase())) && ((isNeighbor((Button)n)) || (row == -1 && col == -1))){
+			if((((Button)n).getText().toUpperCase().equals(text.toUpperCase())) && ((isNeighbor((Button)n)) || (row == -1 && col == -1)) && !visited[GridPane.getRowIndex(n)][GridPane.getColumnIndex(n)]){
 				deliverable.add(n);
 			}
 		}
@@ -235,13 +235,15 @@ public class Driver extends Application{
 		
 		//Game Board
 		GridPane pboard = new GridPane();
-		pboard.setHgap(15);
-		pboard.setVgap(15);
+		pboard.setHgap(0);
+		pboard.setVgap(0);
 		pboard.setPadding(new Insets(10,10,10,10));
 		for(int i = 0; i < 4; i++){
 			for(int j = 0; j < 4; j++){
 				int stuffy = (int)(Math.random()*(double)from.size());
 				Button button = new Button(from.get(stuffy)[(int)(Math.random()*6)]);
+				button.setMinSize(40, 40);
+				button.setMaxSize(40, 40);
 				from.remove(stuffy);
 				button.setOnAction(new EventHandler<ActionEvent>(){
 					@Override
