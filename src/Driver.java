@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -111,6 +112,16 @@ public class Driver extends Application{
 		return null;
 	}
 	
+	public Node getNodeByText(String text, GridPane gp){
+		ObservableList<Node> c = gp.getChildren();
+		for(Node n : c){
+			if(((Button)n).getText().toUpperCase().equals(text.toUpperCase())){
+				return n;
+			}
+		}
+		return null;
+	}
+	
 	public void colorSurrounds(int row, int col, GridPane gp){
 		for(int i = 0; i < height; i++){
 			for(int j = 0; j < width; j++){
@@ -133,6 +144,30 @@ public class Driver extends Application{
 				getNode(i, j, gp).setEffect(null);
 			}
 		}
+	}
+	
+	public boolean isAlpha(String s){
+		char[] thing = s.toCharArray();
+		
+		for(char c : thing){
+			if(!Character.isLetter(c)){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public boolean areNeighbours(Button a, Button b){
+		if(((GridPane.getRowIndex(a) == GridPane.getRowIndex(b) + 1) 
+				&& ((GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) + 1) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b)) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) - 1))) 
+				|| ((GridPane.getRowIndex(a) == GridPane.getRowIndex(b)) 
+				&& ((GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) + 1) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) -1)))
+				||  ((GridPane.getRowIndex(a) == GridPane.getRowIndex(b) - 1) 
+				&& ((GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) + 1) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b)) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) - 1)))){
+			return true;
+		}
+		return false;
 	}
 	
 	@Override
@@ -211,10 +246,22 @@ public class Driver extends Application{
 				width += 1;
 				pboard.add(button, i, j);
 				defaults[i][j] = button;
+				System.out.println(button.getText());
 			}
 			height += 1;
 		}		
 		width /= height;
+		
+		//change to handle two consecutive letters
+		//change to handle two of the same letters on board
+		//handle letters that don't appear
+		root.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
+			System.out.println(ev.getText().toUpperCase());
+			/**if(isAlpha(ev.getText())){
+				((Button)getNodeByText(ev.getText(), pboard)).fire();
+			}**/
+		}
+		);
 		
 		HBox buttons = new HBox();
 		buttons.setSpacing(15);
@@ -248,6 +295,7 @@ public class Driver extends Application{
 		                		dialog.close();
 		                	}
 		                });
+		                okay.setDefaultButton(true);
 		                ugh.getChildren().add(okay);
 		                
 		                Scene scene = new Scene(ugh, 350, 60);
@@ -271,7 +319,7 @@ public class Driver extends Application{
 		});		
 		buttons.getChildren().add(sButton);
 		
-		Button cButton = new Button("Clear");
+		Button cButton = new Button("Clear");//check esc works
 		cButton.setCancelButton(true);
 		cButton.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
