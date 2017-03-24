@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -35,6 +36,7 @@ public class Driver extends Application{
 	private int width = 0;
 	private int height = 0;
 	private Button [][] defaults = new Button[4][4];
+	private String theRealOG = "";
 	private ArrayList<String[]> from = new ArrayList<String[]>(Arrays.asList(new String[]{"A","A","E","E","G","N"}, 
 																			 new String[]{"A","B","B","J","O","O"},
 																			 new String[]{"A","C","H","O","P","S"},
@@ -51,9 +53,11 @@ public class Driver extends Application{
 																			 new String[]{"E","L","R","T","T","Y"},
 																			 new String[]{"H","I","M","N","U","QU"},
 																			 new String[]{"H","L","N","N","R","Z"}));
-	
-	DropShadow shadow = new DropShadow();
-	Glow glow = new Glow(10);
+	private boolean mustbe = true;
+	private DropShadow shadow = new DropShadow();
+	private Glow glow = new Glow(10);
+	private SepiaTone sepiatone = new SepiaTone(0.4);
+	private int temp = 0;
 	
 	//String from an ArrayList of strings
 	public static String getString(ArrayList<String> a){
@@ -112,14 +116,15 @@ public class Driver extends Application{
 		return null;
 	}
 	
-	public Node getNodeByText(String text, GridPane gp){
+	public ArrayList<Node> getWorkingNodesByText(String text, GridPane gp){
 		ObservableList<Node> c = gp.getChildren();
+		ArrayList<Node> deliverable = new ArrayList<Node>();
 		for(Node n : c){
-			if(((Button)n).getText().toUpperCase().equals(text.toUpperCase())){
-				return n;
+			if((((Button)n).getText().toUpperCase().equals(text.toUpperCase())) && ((isNeighbor((Button)n)) || (row == -1 && col == -1))){
+				deliverable.add(n);
 			}
 		}
-		return null;
+		return deliverable;
 	}
 	
 	public void colorSurrounds(int row, int col, GridPane gp){
@@ -158,16 +163,38 @@ public class Driver extends Application{
 		return true;
 	}
 	
-	public boolean areNeighbours(Button a, Button b){
-		if(((GridPane.getRowIndex(a) == GridPane.getRowIndex(b) + 1) 
+	public boolean isNeighbor(Button button){
+		/**if(((GridPane.getRowIndex(a) == GridPane.getRowIndex(b) + 1) 
 				&& ((GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) + 1) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b)) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) - 1))) 
 				|| ((GridPane.getRowIndex(a) == GridPane.getRowIndex(b)) 
 				&& ((GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) + 1) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) -1)))
 				||  ((GridPane.getRowIndex(a) == GridPane.getRowIndex(b) - 1) 
 				&& ((GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) + 1) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b)) || (GridPane.getColumnIndex(a) == GridPane.getColumnIndex(b) - 1)))){
 			return true;
+		}**/
+		if((((GridPane.getRowIndex(button) == row + 1) 
+			&& ((GridPane.getColumnIndex(button) == col + 1) || (GridPane.getColumnIndex(button) == col) || (GridPane.getColumnIndex(button) == col - 1))) 
+			|| ((GridPane.getRowIndex(button) == row) 
+			&& ((GridPane.getColumnIndex(button) == col + 1) || (GridPane.getColumnIndex(button) == col -1)))
+			||  ((GridPane.getRowIndex(button) == row - 1) 
+			&& ((GridPane.getColumnIndex(button) == col + 1) || (GridPane.getColumnIndex(button) == col) || (GridPane.getColumnIndex(button) == col - 1))))){
+			return true;
 		}
 		return false;
+	}
+	
+	public void resetTheNumberedOnes(GridPane gp){
+		ObservableList<Node> stuffy = gp.getChildren();
+		for(Node n : stuffy){
+			try{
+				Integer number = Integer.parseInt(((Button)n).getText());
+				((Button)n).setText(theRealOG);
+			}
+			catch(NumberFormatException e){
+				continue;
+			}
+		}
+		
 	}
 	
 	@Override
@@ -219,13 +246,7 @@ public class Driver extends Application{
 				button.setOnAction(new EventHandler<ActionEvent>(){
 					@Override
 					public void handle(ActionEvent event){
-						if((((GridPane.getRowIndex(button) == row + 1) 
-							&& ((GridPane.getColumnIndex(button) == col + 1) || (GridPane.getColumnIndex(button) == col) || (GridPane.getColumnIndex(button) == col - 1))) 
-							|| ((GridPane.getRowIndex(button) == row) 
-							&& ((GridPane.getColumnIndex(button) == col + 1) || (GridPane.getColumnIndex(button) == col -1)))
-							||  ((GridPane.getRowIndex(button) == row - 1) 
-							&& ((GridPane.getColumnIndex(button) == col + 1) || (GridPane.getColumnIndex(button) == col) || (GridPane.getColumnIndex(button) == col - 1))))
-							&& (!visited[GridPane.getRowIndex(button)][GridPane.getColumnIndex(button)])){
+						if(isNeighbor(button) && !visited[GridPane.getRowIndex(button)][GridPane.getColumnIndex(button)]){
 							word.add(button.getText());
 							currword.setText(getString(word));
 							col = GridPane.getColumnIndex(button);
@@ -255,13 +276,7 @@ public class Driver extends Application{
 		//change to handle two consecutive letters
 		//change to handle two of the same letters on board
 		//handle letters that don't appear
-		root.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
-			System.out.println(ev.getText().toUpperCase());
-			/**if(isAlpha(ev.getText())){
-				((Button)getNodeByText(ev.getText(), pboard)).fire();
-			}**/
-		}
-		);
+		
 		
 		HBox buttons = new HBox();
 		buttons.setSpacing(15);
@@ -312,6 +327,7 @@ public class Driver extends Application{
 					col = -1;
 					row = -1;
 					clean(pboard);
+					resetTheNumberedOnes(pboard);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -334,6 +350,7 @@ public class Driver extends Application{
 				col = -1;
 				row = -1;
 				clean(pboard);
+				resetTheNumberedOnes(pboard);
 			}
 		});
 		
@@ -343,6 +360,54 @@ public class Driver extends Application{
 		
 		root.add(pboard, 0, 0);
 		root.add(tasks, 1, 0);
+		
+		root.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
+			System.out.println(ev.getText().toUpperCase());
+			/**if(isAlpha(ev.getText())){
+				((Button)getNodeByText(ev.getText(), pboard)).fire();
+			}**/
+			if(isAlpha(ev.getText()) && mustbe){
+				String a = ev.getText();
+				if(ev.getText().equals("q")){
+					a = "qu";
+				}
+				ArrayList<Node> stuff = getWorkingNodesByText(a, pboard);
+				temp = stuff.size();
+				if(stuff.size() == 1){
+					((Button)stuff.get(0)).fire();
+				}
+				else if (stuff.size() > 1){
+					//String theRealOG = ((Button)stuff.get(0)).getText();
+					theRealOG = ((Button)stuff.get(0)).getText();
+					mustbe = false;
+					for(int i = 0; i < stuff.size(); i++){
+						((Button)stuff.get(i)).setText(Integer.toString(i+1));
+						((Button)stuff.get(i)).setEffect(sepiatone);
+					}
+				}
+			}
+			else if(!mustbe){//take care of exception where it doesn't work
+				try{
+					if(Integer.parseInt(ev.getText()) > 0 && Integer.parseInt(ev.getText()) <= temp){
+						ArrayList<Node> stuff = getWorkingNodesByText(ev.getText(), pboard);
+						word.add(theRealOG);
+						currword.setText(getString(word));
+						col = GridPane.getColumnIndex((Button)stuff.get(0));
+						row = GridPane.getRowIndex((Button)stuff.get(0));
+						visited[row][col] = true;
+						colorSurrounds(row, col, pboard);
+						resetTheNumberedOnes(pboard);
+						mustbe = true;
+						temp = 0;
+						//reset all
+					}
+				}
+				catch(NumberFormatException e){
+					System.out.println("stupid");
+				}
+			}
+		}
+		);
 		
 		Scene scene = new Scene(root, 320, 180);
 		
