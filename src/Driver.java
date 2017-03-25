@@ -330,6 +330,7 @@ public class Driver extends Application{
 					row = -1;
 					clean(pboard);
 					resetTheNumberedOnes(pboard);
+					mustbe = true;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -353,6 +354,7 @@ public class Driver extends Application{
 				row = -1;
 				clean(pboard);
 				resetTheNumberedOnes(pboard);
+				mustbe = true;
 			}
 		});
 		

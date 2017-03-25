@@ -2,3 +2,4 @@ To Add:
 
 Check text retroactively
 List of already discovered text
+Insults when the player gets it wrong
