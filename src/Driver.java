@@ -353,6 +353,8 @@ public class Driver extends Application{
 			public void handle(ActionEvent event){
 				word.clear();
 				currword.setText("[Nothing]");
+				score.setText("0");
+				
 				for(int i = 0; i < visited.length; i++){
 					for(int j = 0; j < visited[0].length; j++){
 						visited[i][j] = false;
