@@ -1,11 +1,14 @@
 import javafx.application.*;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.effect.SepiaTone;
@@ -13,11 +16,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -366,11 +373,11 @@ public class Driver extends Application{
 		root.add(tasks, 1, 0);
 		
 		root.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
-			System.out.println(ev.getText().toUpperCase());
-			/**if(isAlpha(ev.getText())){
-				((Button)getNodeByText(ev.getText(), pboard)).fire();
-			}**/
-			if(isAlpha(ev.getText()) && mustbe){
+			System.out.println(ev.getCode());
+			if(ev.getCode().toString().equals("BACK_SPACE")){
+				cButton.fire();
+			}
+			else if(isAlpha(ev.getText()) && mustbe){
 				String a = ev.getText();
 				if(ev.getText().equals("q")){
 					a = "qu";
@@ -413,12 +420,23 @@ public class Driver extends Application{
 		}
 		);
 		
+		Text message = new Text("you suck");
+		
+		/**Group blended = new Group(message, root);
+		blended.setBlendMode(BlendMode.OVERLAY);
+		root.getChildren().add(blended);**/ //need to add sprite and fix
+		
+		//root.getChildren().add(newscene)
+		
 		Scene scene = new Scene(root, 320, 180);
 		
 		thingy.setTitle("Boggle");
 		thingy.setScene(scene);
 		thingy.show();
 		
+		Media music = new Media(new File("Summertime.mp3").toURI().toString());
+		MediaPlayer mediaplayer = new MediaPlayer(music);
+		mediaplayer.play();		
 	}	
 
 	public static void main(String[] args) {
