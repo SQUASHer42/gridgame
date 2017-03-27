@@ -442,7 +442,7 @@ public class Driver extends Application{
 		thingy.setScene(scene);
 		thingy.show();
 		
-		Media music = new Media(new File("Chet.mp3").toURI().toString());
+		Media music = new Media(new File("ReggieWatts.mp3").toURI().toString());
 		MediaPlayer mediaplayer = new MediaPlayer(music);
 		mediaplayer.setOnEndOfMedia(new Runnable(){
 			public void run(){
