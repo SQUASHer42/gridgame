@@ -1,4 +1,7 @@
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.application.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,10 +17,15 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -32,6 +40,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class Driver extends Application{
 	private int col = -1;
@@ -59,6 +71,15 @@ public class Driver extends Application{
 																			 new String[]{"E","L","R","T","T","Y"},
 																			 new String[]{"H","I","M","N","U","QU"},
 																			 new String[]{"H","L","N","N","R","Z"}));
+	private static ArrayList<String> insults = new ArrayList<String>(Arrays.asList("Get the fuck outta my sight before I demolish you.", 
+																			"What are you, a fucking a cappela group? Now play the God damn kit!",
+																			"Start practicing harder Neiman.",
+																			"Not quite my tempo.",
+																			"Oh my fucking God. Are you one of those single tear people? Do I look like a double fucking rainbow to you?",
+																			"For the record, Metz wasn't out of tune, you were Ericcson. But Metz didn't know the difference, and that's bad enough.",
+																			"I wasn't there to conduct. Any fuckin' moron can wave his arms and keep people in tempo. I was there to push people beyond what's expected of them.",
+																			"Were you rushing or were you dragging? ",
+																			"So you DO know the difference! If you deliberately sabotage my band, I will fuck you like a pig. Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY FUCKING TIME?!? "));
 	private boolean mustbe = true;
 	private DropShadow shadow = new DropShadow();
 	private Glow glow = new Glow(10);
@@ -75,7 +96,7 @@ public class Driver extends Application{
 		return temp;
 	}
 	
-	public static void lookUp(String s, Text f) throws IOException{
+	public static void lookUp(String s, Text f, FadeTransition a, Text m) throws IOException{
 		boolean works = true;
 		
 		URL url = new URL("http://services.aonaware.com/DictService/Default.aspx?action=define&dict=*&query=" + s);
@@ -87,7 +108,19 @@ public class Driver extends Application{
         while ((line = wow.readLine()) != null) {
             System.out.println(line);
             if(line.contains("No definitions found")){
+            	m.setText(insults.get((int)(Math.random()*insults.size())));
+            	m.setVisible(true);
             	works = false;
+            	a.play();
+            	new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					m.setVisible(false);
+            				}
+            			}, 
+            			5000
+            	);
             	break;
             }
         }
@@ -205,7 +238,7 @@ public class Driver extends Application{
 	
 	@Override
 	public void start(Stage thingy){
-		thingy.getIcons().add(new Image("http://queenbeecoupons.com/wp-content/uploads/2011/02/Boggle_app_icon.png"));
+		//thingy.getIcons().add(new Image("C:\\Users\\panda\\Desktop\\Eclipse\\Boggle with Josh\\Icon.png"));
 		//why can't this be a part of the executable jar?
 		
 		ArrayList<String> word = new ArrayList<String>();
@@ -214,7 +247,7 @@ public class Driver extends Application{
 		
 		//Side Panel
 		VBox tasks = new VBox(5);
-		tasks.setSpacing(15);
+		tasks.setSpacing(10);
 		tasks.setPadding(new Insets(10,10,10,10));
 		
 		Text scoret = new Text();
@@ -225,6 +258,23 @@ public class Driver extends Application{
 		score.setText("0");
 		tasks.getChildren().add(score);
 		
+		Text message = new Text();
+		message.setFont(Font.font("Verdana", 12));
+		message.setX(10);
+		message.setY(90);
+		message.setWrappingWidth(160);
+		message.setTextAlignment(TextAlignment.CENTER);
+		message.setVisible(false);
+		
+		FadeTransition ft = new FadeTransition(Duration.millis(2000));
+		ft.setAutoReverse(true);
+		ft.setNode(message);
+		ft.setFromValue(0);
+		ft.setToValue(1);
+		ft.setCycleCount(1);
+		//ft.play();
+		
+	
 		/**HBox cw = new HBox();
 		cw.setSpacing (10);**/
 		
@@ -299,7 +349,7 @@ public class Driver extends Application{
 				try {
 					if(getString(word).length() >= 3){
 						if(!words.contains(getString(word))){
-							lookUp(getString(word), score);
+							lookUp(getString(word), score, ft, message);
 						}
 					}
 					else if(knowstheirstuff){
@@ -372,7 +422,11 @@ public class Driver extends Application{
 		
 		tasks.getChildren().add(buttons);
 		
-		root.add(pboard, 0, 0);
+		
+		Pane pane = new Pane();
+		pane.getChildren().addAll(pboard, message);
+		
+		root.add(pane, 0, 0);
 		root.add(tasks, 1, 0);
 		
 		root.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
@@ -423,13 +477,8 @@ public class Driver extends Application{
 				}
 			}
 		}
-		);
+		);		
 		
-		Text message = new Text("you suck");
-		
-		final Timeline timeline = new Timeline();
-		timeline.setCycleCount(Timeline.INDEFINITE);
-		timeline.setAutoReverse(true);
 		/**Group blended = new Group(message, root);
 		blended.setBlendMode(BlendMode.OVERLAY);
 		root.getChildren().add(blended);**/ //need to add sprite and fix
@@ -442,7 +491,7 @@ public class Driver extends Application{
 		thingy.setScene(scene);
 		thingy.show();
 		
-		Media music = new Media(new File("ReggieWatts.mp3").toURI().toString());
+		Media music = new Media(new File("ReggieWatts2.mp3").toURI().toString());
 		MediaPlayer mediaplayer = new MediaPlayer(music);
 		mediaplayer.setOnEndOfMedia(new Runnable(){
 			public void run(){
