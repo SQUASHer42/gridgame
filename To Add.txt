@@ -3,6 +3,5 @@ To Add:
 Check text retroactively
 List of already discovered text
 Insults when the player gets it wrong
-Letter should be added to word before the number is selected because if that's the entire word
-Reggie Watts in the background music for inspiration
+Reggie Watts in the background music for inspiration --> right now we have some Chet Atkins
 Implement actual backspace button

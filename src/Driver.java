@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.effect.SepiaTone;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -19,6 +20,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -203,6 +205,8 @@ public class Driver extends Application{
 	
 	@Override
 	public void start(Stage thingy){
+		thingy.getIcons().add(new Image("http://queenbeecoupons.com/wp-content/uploads/2011/02/Boggle_app_icon.png"));
+		//why can't this be a part of the executable jar?
 		
 		ArrayList<String> word = new ArrayList<String>();
 		
@@ -438,7 +442,12 @@ public class Driver extends Application{
 		
 		Media music = new Media(new File("Chet.mp3").toURI().toString());
 		MediaPlayer mediaplayer = new MediaPlayer(music);
-		mediaplayer.play();
+		mediaplayer.setOnEndOfMedia(new Runnable(){
+			public void run(){
+				mediaplayer.seek(Duration.ZERO);
+			}
+		});
+		mediaplayer.play(); //--> why can this be a part of the jar?
 		
 		//ask why this only works with an internet connection
 	}	
