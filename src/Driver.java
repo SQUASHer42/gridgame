@@ -430,7 +430,7 @@ public class Driver extends Application{
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.setAutoReverse(true);
-		//asd;lkfja;sldkfja;sldfja;sldkf
+		//asd;lkfja;sldkfja;sldfja;sldkfsdf
 		/**Group blended = new Group(message, root);
 		blended.setBlendMode(BlendMode.OVERLAY);
 		root.getChildren().add(blended);**/ //need to add sprite and fix
