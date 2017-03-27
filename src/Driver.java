@@ -1,14 +1,12 @@
+import javafx.animation.Timeline;
 import javafx.application.*;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.effect.SepiaTone;
@@ -16,7 +14,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
@@ -390,6 +387,8 @@ public class Driver extends Application{
 				else if (stuff.size() > 1){
 					//String theRealOG = ((Button)stuff.get(0)).getText();
 					theRealOG = ((Button)stuff.get(0)).getText();
+					word.add(((Button)stuff.get(0)).getText());//fix so that this appears before the numbers do2
+					currword.setText(getString(word));
 					mustbe = false;
 					for(int i = 0; i < stuff.size(); i++){
 						((Button)stuff.get(i)).setText(Integer.toString(i+1));
@@ -397,11 +396,11 @@ public class Driver extends Application{
 					}
 				}
 			}
-			else if(!mustbe){//take care of exception where it doesn't work
+			else if(!mustbe){//take care of exception where it doesn't work because it is a number
 				try{
 					if(Integer.parseInt(ev.getText()) > 0 && Integer.parseInt(ev.getText()) <= temp){
 						ArrayList<Node> stuff = getWorkingNodesByText(ev.getText(), pboard);
-						word.add(theRealOG);
+						//word.add(theRealOG);
 						currword.setText(getString(word));
 						col = GridPane.getColumnIndex((Button)stuff.get(0));
 						row = GridPane.getRowIndex((Button)stuff.get(0));
@@ -422,6 +421,9 @@ public class Driver extends Application{
 		
 		Text message = new Text("you suck");
 		
+		final Timeline timeline = new Timeline();
+		
+		
 		/**Group blended = new Group(message, root);
 		blended.setBlendMode(BlendMode.OVERLAY);
 		root.getChildren().add(blended);**/ //need to add sprite and fix
@@ -434,9 +436,11 @@ public class Driver extends Application{
 		thingy.setScene(scene);
 		thingy.show();
 		
-		Media music = new Media(new File("Summertime.mp3").toURI().toString());
+		Media music = new Media(new File("Chet.mp3").toURI().toString());
 		MediaPlayer mediaplayer = new MediaPlayer(music);
-		mediaplayer.play();		
+		mediaplayer.play();
+		
+		//ask why this only works with an internet connection
 	}	
 
 	public static void main(String[] args) {
