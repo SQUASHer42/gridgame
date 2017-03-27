@@ -428,7 +428,8 @@ public class Driver extends Application{
 		Text message = new Text("you suck");
 		
 		final Timeline timeline = new Timeline();
-		
+		timeline.setCycleCount(Timeline.INDEFINITE);
+		timeline.setAutoReverse(true);
 		
 		/**Group blended = new Group(message, root);
 		blended.setBlendMode(BlendMode.OVERLAY);
