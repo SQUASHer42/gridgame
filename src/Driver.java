@@ -1,7 +1,4 @@
-import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.animation.Timeline;
-import javafx.animation.Transition;
 import javafx.application.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.effect.SepiaTone;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -21,8 +17,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -40,10 +34,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 public class Driver extends Application{
 	private int col = -1;
@@ -55,6 +47,8 @@ public class Driver extends Application{
 	private int height = 0;
 	private Button [][] defaults = new Button[4][4];
 	private String theRealOG = "";
+	private ArrayList<Integer> lastVisitedRow = new ArrayList<Integer>(/**Arrays.asList(-1)**/);
+	private ArrayList<Integer> lastVisitedColumn = new ArrayList<Integer>(/**Arrays.asList(-1)**/);
 	private ArrayList<String[]> from = new ArrayList<String[]>(Arrays.asList(new String[]{"A","A","E","E","G","N"}, 
 																			 new String[]{"A","B","B","J","O","O"},
 																			 new String[]{"A","C","H","O","P","S"},
@@ -77,7 +71,7 @@ public class Driver extends Application{
 																			"Not quite my tempo.",
 																			"Were you rushing or were you dragging? ",
 																			"So you DO know the difference!",
-																			"Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY FUCKING TIME?!? "));
+																			"Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY FUCKING TIME?!?"));
 	private boolean mustbe = true;
 	private DropShadow shadow = new DropShadow();
 	private Glow glow = new Glow(10);
@@ -152,7 +146,7 @@ public class Driver extends Application{
             					plus.setVisible(false);
             				}
             			}, 
-            			5000
+            			1000
             	);
         	}
         	else if(s.length() == 6){
@@ -167,7 +161,7 @@ public class Driver extends Application{
             					plus.setVisible(false);
             				}
             			}, 
-            			5000
+            			1000
             	);
         	}
         	else if(s.length() == 5){
@@ -182,7 +176,7 @@ public class Driver extends Application{
             					plus.setVisible(false);
             				}
             			}, 
-            			5000
+            			1000
             	);
         	}
         	else{
@@ -378,6 +372,8 @@ public class Driver extends Application{
 							currword.setText(getString(word));
 							col = GridPane.getColumnIndex(button);
 							row = GridPane.getRowIndex(button);
+							lastVisitedColumn.add(col);
+							lastVisitedRow.add(row);
 							visited[row][col] = true;
 							colorSurrounds(row, col, pboard);
 						}
@@ -386,6 +382,8 @@ public class Driver extends Application{
 							currword.setText(getString(word));
 							col = GridPane.getColumnIndex(button);
 							row = GridPane.getRowIndex(button);			
+							lastVisitedColumn.add(col);
+							lastVisitedRow.add(row);
 							visited[row][col] = true;
 							colorSurrounds(row, col, pboard);							
 						}
@@ -499,7 +497,22 @@ public class Driver extends Application{
 		root.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
 			System.out.println(ev.getCode());
 			if(ev.getCode().toString().equals("BACK_SPACE")){
-				cButton.fire();
+				if(word.size() == 1){
+					cButton.fire();
+				}
+				else{
+				word.remove(word.size()-1);//catch 0 size exception
+				currword.setText(getString(word));
+				visited[lastVisitedRow.get(lastVisitedRow.size()-1)][lastVisitedColumn.get(lastVisitedColumn.size()-1)] = false;//need to fix
+				lastVisitedRow.remove(lastVisitedRow.size()-1);
+				lastVisitedColumn.remove(lastVisitedColumn.size()-1);
+				col = lastVisitedColumn.get(lastVisitedColumn.size()-1);//catch less than size 1 exception
+				row = lastVisitedRow.get(lastVisitedRow.size()-1);
+				/**lastVisitedColumn.remove(lastVisitedColumn.size()-1);
+				lastVisitedRow.remove(lastVisitedRow.size()-1);
+				visited[row][col] = true;**/
+				colorSurrounds(row, col, pboard);//add clear to submit and clear buttons
+				}
 			}
 			else if(isAlpha(ev.getText()) && mustbe){
 				String a = ev.getText();

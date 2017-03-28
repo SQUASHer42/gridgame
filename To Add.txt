@@ -4,3 +4,4 @@ Check text retroactively
 List of already discovered text
 Implement actual backspace button
 Click through the insults
+Implement arrow functions
