@@ -72,14 +72,12 @@ public class Driver extends Application{
 																			 new String[]{"H","I","M","N","U","QU"},
 																			 new String[]{"H","L","N","N","R","Z"}));
 	private static ArrayList<String> insults = new ArrayList<String>(Arrays.asList("Get the fuck outta my sight before I demolish you.", 
-																			"What are you, a fucking a cappela group? Now play the God damn kit!",
+																			"What are you, a fucking a cappela group?",
 																			"Start practicing harder Neiman.",
 																			"Not quite my tempo.",
-																			"Oh my fucking God. Are you one of those single tear people? Do I look like a double fucking rainbow to you?",
-																			"For the record, Metz wasn't out of tune, you were Ericcson. But Metz didn't know the difference, and that's bad enough.",
-																			"I wasn't there to conduct. Any fuckin' moron can wave his arms and keep people in tempo. I was there to push people beyond what's expected of them.",
 																			"Were you rushing or were you dragging? ",
-																			"So you DO know the difference! If you deliberately sabotage my band, I will fuck you like a pig. Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY FUCKING TIME?!? "));
+																			"So you DO know the difference!",
+																			"Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY FUCKING TIME?!? "));
 	private boolean mustbe = true;
 	private DropShadow shadow = new DropShadow();
 	private Glow glow = new Glow(10);
@@ -96,7 +94,7 @@ public class Driver extends Application{
 		return temp;
 	}
 	
-	public static void lookUp(String s, Text f, FadeTransition a, Text m) throws IOException{
+	public static void lookUp(String s, Text f, FadeTransition a, Text m, FadeTransition b, Text plus) throws IOException{
 		boolean works = true;
 		
 		URL url = new URL("http://services.aonaware.com/DictService/Default.aspx?action=define&dict=*&query=" + s);
@@ -129,18 +127,78 @@ public class Driver extends Application{
         	words.add(s);
         	if(s.length() >= 8){
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 11));
+        		plus.setText("+11");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			5000
+            	);
         	}
         	else if(s.length() == 7){
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 5));
+        		plus.setText("+5");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			5000
+            	);
         	}
         	else if(s.length() == 6){
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 3));
+        		plus.setText("+3");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			5000
+            	);
         	}
         	else if(s.length() == 5){
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 2));
+        		plus.setText("+2");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			5000
+            	);
         	}
         	else{
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 1));
+        		plus.setText("+1");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			1000
+            	);
         	}
         }
 	}
@@ -247,16 +305,26 @@ public class Driver extends Application{
 		
 		//Side Panel
 		VBox tasks = new VBox(5);
-		tasks.setSpacing(10);
+		tasks.setSpacing(15);
 		tasks.setPadding(new Insets(10,10,10,10));
 		
 		Text scoret = new Text();
 		scoret.setText("Score:");
 		tasks.getChildren().add(scoret);
 		
+		HBox scoreplus = new HBox(2);
 		Text score = new Text();
 		score.setText("0");
-		tasks.getChildren().add(score);
+		scoreplus.getChildren().add(score);
+		Text plus = new Text("");
+		plus.setVisible(false);
+		FadeTransition ft2 = new FadeTransition(Duration.millis(500));
+		ft2.setNode(plus);
+		ft2.setFromValue(0);
+		ft2.setToValue(1);
+		ft2.setCycleCount(1);
+		scoreplus.getChildren().add(plus);
+		tasks.getChildren().add(scoreplus);
 		
 		Text message = new Text();
 		message.setFont(Font.font("Verdana", 12));
@@ -267,7 +335,6 @@ public class Driver extends Application{
 		message.setVisible(false);
 		
 		FadeTransition ft = new FadeTransition(Duration.millis(2000));
-		ft.setAutoReverse(true);
 		ft.setNode(message);
 		ft.setFromValue(0);
 		ft.setToValue(1);
@@ -349,7 +416,7 @@ public class Driver extends Application{
 				try {
 					if(getString(word).length() >= 3){
 						if(!words.contains(getString(word))){
-							lookUp(getString(word), score, ft, message);
+							lookUp(getString(word), score, ft, message, ft2, plus);
 						}
 					}
 					else if(knowstheirstuff){
