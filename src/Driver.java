@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.effect.SepiaTone;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -66,12 +67,18 @@ public class Driver extends Application{
 																			 new String[]{"H","I","M","N","U","QU"},
 																			 new String[]{"H","L","N","N","R","Z"}));
 	private static ArrayList<String> insults = new ArrayList<String>(Arrays.asList("Get the fuck outta my sight before I demolish you.", 
-																			"What are you, a fucking a cappela group?",
-																			"Start practicing harder Neiman.",
-																			"Not quite my tempo.",
-																			"Were you rushing or were you dragging? ",
-																			"So you DO know the difference!",
-																			"Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY FUCKING TIME?!?"));
+																					"What are you, a fucking a cappela group?",
+																					"Start practicing harder Neiman.",
+																					"Not quite my tempo.",
+																					"Were you rushing or were you dragging? ",
+																					"So you DO know the difference!",
+																					"Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY FUCKING TIME?!?",
+																					"Whiplash, bar 125, big boy tempo.",
+																					"Try me, you fuckin' weasel.",
+																					"Do not touch this kit.",
+																					"Neiman, what the fuck?",
+																					"Neiman, you're done.",
+																					"There's no fucking mars bar down there."));
 	private boolean mustbe = true;
 	private DropShadow shadow = new DropShadow();
 	private Glow glow = new Glow(10);
@@ -131,7 +138,7 @@ public class Driver extends Application{
             					plus.setVisible(false);
             				}
             			}, 
-            			5000
+            			1000
             	);
         	}
         	else if(s.length() == 7){
@@ -290,7 +297,7 @@ public class Driver extends Application{
 	
 	@Override
 	public void start(Stage thingy){
-		//thingy.getIcons().add(new Image("C:\\Users\\panda\\Desktop\\Eclipse\\Boggle with Josh\\Icon.png"));
+		thingy.getIcons().add(new Image("file:Icon.png"));
 		//why can't this be a part of the executable jar?
 		
 		ArrayList<String> word = new ArrayList<String>();
