@@ -2,6 +2,4 @@ To Add:
 
 Check text retroactively
 List of already discovered text
-Insults when the player gets it wrong
-Reggie Watts in the background music for inspiration --> right now we have some Chet Atkins
 Implement actual backspace button
