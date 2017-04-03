@@ -511,10 +511,10 @@ public class Driver extends Application{
 				word.remove(word.size()-1);//catch 0 size exception
 				currword.setText(getString(word));
 				visited[lastVisitedRow.get(lastVisitedRow.size()-1)][lastVisitedColumn.get(lastVisitedColumn.size()-1)] = false;//need to fix
-				lastVisitedRow.remove(lastVisitedRow.size()-1);
-				lastVisitedColumn.remove(lastVisitedColumn.size()-1);
 				col = lastVisitedColumn.get(lastVisitedColumn.size()-1);//catch less than size 1 exception
 				row = lastVisitedRow.get(lastVisitedRow.size()-1);
+				lastVisitedRow.remove(lastVisitedRow.size()-1);
+				lastVisitedColumn.remove(lastVisitedColumn.size()-1);
 				/**lastVisitedColumn.remove(lastVisitedColumn.size()-1);
 				lastVisitedRow.remove(lastVisitedRow.size()-1);
 				visited[row][col] = true;**/
