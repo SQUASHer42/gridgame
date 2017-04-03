@@ -519,7 +519,6 @@ public class Driver extends Application{
 				lastVisitedRow.remove(lastVisitedRow.size()-1);
 				visited[row][col] = true;**/
 				resetTheNumberedOnes(pboard);
-				
 				colorSurrounds(row, col, pboard);//add clear to submit and clear buttons
 				
 				}
