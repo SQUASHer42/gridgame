@@ -66,19 +66,18 @@ public class Driver extends Application{
 																			 new String[]{"E","L","R","T","T","Y"},
 																			 new String[]{"H","I","M","N","U","QU"},
 																			 new String[]{"H","L","N","N","R","Z"}));
-	private static ArrayList<String> insults = new ArrayList<String>(Arrays.asList("Get the duck outta my sight before I demolish you.", 
-																					"What are you, a ducking a cappela group?",
-																					"Start practicing harder Neiman.",
-																					"Not quite my tempo.",
-																					"Were you rushing or were you dragging? ",
-																					"So you DO know the difference!",
-																					"Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY DUCKING TIME?!?",
-																					"Whiplash, bar 125, big boy tempo.",
-																					"Try me, you duckin' weasel.",
-																					"Do not touch this kit.",
-																					"Neiman, what the duck?",
-																					"Neiman, you're done.",
-																					"There's no ducking mars bar down there."));
+	private static ArrayList<String> insults = new ArrayList<String>(Arrays.asList("Not a word.", 
+																					"Please try again.",
+																					"You're wearing my patience",
+																					"Do you even know how to play",
+																					"Do you even English bro? ",
+																					"Stupid.",
+																					"Much effort. No good. Such wow.",
+																					"Yo momma so stupid you can't Boggle",
+																					"Insert 2 dollars to continue.",
+																					"You suck.",
+																					"Too slow.",
+																					"I've already run out of insults"));
 	private boolean mustbe = true;
 	private DropShadow shadow = new DropShadow();
 	private Glow glow = new Glow(10);
@@ -464,6 +463,8 @@ public class Driver extends Application{
 					row = -1;
 					clean(pboard);
 					resetTheNumberedOnes(pboard);
+					lastVisitedRow.clear();
+					lastVisitedColumn.clear();
 					mustbe = true;
 				} catch (IOException e) {
 					e.printStackTrace();
