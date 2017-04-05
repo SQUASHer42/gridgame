@@ -66,19 +66,19 @@ public class Driver extends Application{
 																			 new String[]{"E","L","R","T","T","Y"},
 																			 new String[]{"H","I","M","N","U","QU"},
 																			 new String[]{"H","L","N","N","R","Z"}));
-	private static ArrayList<String> insults = new ArrayList<String>(Arrays.asList("Get the fuck outta my sight before I demolish you.", 
-																					"What are you, a fucking a cappela group?",
+	private static ArrayList<String> insults = new ArrayList<String>(Arrays.asList("Get the duck outta my sight before I demolish you.", 
+																					"What are you, a ducking a cappela group?",
 																					"Start practicing harder Neiman.",
 																					"Not quite my tempo.",
 																					"Were you rushing or were you dragging? ",
 																					"So you DO know the difference!",
-																					"Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY FUCKING TIME?!?",
+																					"Now are you a \"rusher\", or are you a \"dragger\", or are you going to be ON MY DUCKING TIME?!?",
 																					"Whiplash, bar 125, big boy tempo.",
-																					"Try me, you fuckin' weasel.",
+																					"Try me, you duckin' weasel.",
 																					"Do not touch this kit.",
-																					"Neiman, what the fuck?",
+																					"Neiman, what the duck?",
 																					"Neiman, you're done.",
-																					"There's no fucking mars bar down there."));
+																					"There's no ducking mars bar down there."));
 	private boolean mustbe = true;
 	private DropShadow shadow = new DropShadow();
 	private Glow glow = new Glow(10);
@@ -297,7 +297,7 @@ public class Driver extends Application{
 	
 	@Override
 	public void start(Stage thingy){
-		thingy.getIcons().add(new Image("file:Icon.png"));
+		thingy.getIcons().add(new Image("file:not-giant-enough-letter-b.jpg"));
 		//why can't this be a part of the executable jar?
 		
 		ArrayList<String> word = new ArrayList<String>();
@@ -375,7 +375,8 @@ public class Driver extends Application{
 					@Override
 					public void handle(ActionEvent event){
 						if(isNeighbor(button) && !visited[GridPane.getRowIndex(button)][GridPane.getColumnIndex(button)]){
-							word.add(button.getText());
+							if(isAlpha(button.getText()))
+								word.add(button.getText());
 							currword.setText(getString(word));
 							col = GridPane.getColumnIndex(button);
 							row = GridPane.getRowIndex(button);
@@ -385,7 +386,8 @@ public class Driver extends Application{
 							colorSurrounds(row, col, pboard);
 						}
 						else if(col == -1 && row == -1){
-							word.add(button.getText());
+							if(isAlpha(button.getText()))
+								word.add(button.getText());
 							currword.setText(getString(word));
 							col = GridPane.getColumnIndex(button);
 							row = GridPane.getRowIndex(button);			
@@ -394,6 +396,8 @@ public class Driver extends Application{
 							visited[row][col] = true;
 							colorSurrounds(row, col, pboard);							
 						}
+						System.out.println(lastVisitedRow);
+						System.out.println(lastVisitedColumn);
 					}
 				});
 				width += 1;
@@ -473,6 +477,8 @@ public class Driver extends Application{
 		cButton.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event){
+				lastVisitedRow.clear();
+				lastVisitedColumn.clear();
 				word.clear();
 				currword.setText("[Nothing]");
 				score.setText("0");
@@ -511,8 +517,15 @@ public class Driver extends Application{
 				word.remove(word.size()-1);//catch 0 size exception
 				currword.setText(getString(word));
 				visited[lastVisitedRow.get(lastVisitedRow.size()-1)][lastVisitedColumn.get(lastVisitedColumn.size()-1)] = false;//need to fix
-				col = lastVisitedColumn.get(lastVisitedColumn.size()-2);//catch less than size 1 exception
-				row = lastVisitedRow.get(lastVisitedRow.size()-2);
+				try{
+					col = lastVisitedColumn.get(lastVisitedColumn.size()-2);//catch less than size 1 exception
+					row = lastVisitedRow.get(lastVisitedRow.size()-2);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+					System.out.println(lastVisitedColumn.get(lastVisitedColumn.size()-2));
+					System.out.println(lastVisitedRow.get(lastVisitedRow.size()-2));
+				}
 				lastVisitedRow.remove(lastVisitedRow.size()-1);
 				lastVisitedColumn.remove(lastVisitedColumn.size()-1);
 				/**lastVisitedColumn.remove(lastVisitedColumn.size()-1);
@@ -522,7 +535,8 @@ public class Driver extends Application{
 				colorSurrounds(row, col, pboard);//add clear to submit and clear buttons
 				
 				}
-				
+				System.out.println(lastVisitedRow);
+				System.out.println(lastVisitedColumn);
 			}
 			else if(isAlpha(ev.getText()) && mustbe){
 				String a = ev.getText();
@@ -551,11 +565,12 @@ public class Driver extends Application{
 					if(Integer.parseInt(ev.getText()) > 0 && Integer.parseInt(ev.getText()) <= temp){
 						ArrayList<Node> stuff = getWorkingNodesByText(ev.getText(), pboard);
 						//word.add(theRealOG);
-						currword.setText(getString(word));
+						/**currword.setText(getString(word));
 						col = GridPane.getColumnIndex((Button)stuff.get(0));
 						row = GridPane.getRowIndex((Button)stuff.get(0));
-						visited[row][col] = true;
-						colorSurrounds(row, col, pboard);
+						visited[row][col] = true;**/
+						((Button)stuff.get(0)).fire();
+						//colorSurrounds(row, col, pboard);
 						resetTheNumberedOnes(pboard);
 						mustbe = true;
 						temp = 0;
