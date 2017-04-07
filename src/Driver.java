@@ -515,9 +515,13 @@ public class Driver extends Application{
 					cButton.fire();
 				}
 				else{
+				if(!mustbe){
+					word.remove(word.size()-1);
+					mustbe = true;
+				}
 				word.remove(word.size()-1);//catch 0 size exception
 				currword.setText(getString(word));
-				visited[lastVisitedRow.get(lastVisitedRow.size()-1)][lastVisitedColumn.get(lastVisitedColumn.size()-1)] = false;//need to fix
+				visited[lastVisitedRow.get(lastVisitedRow.size()-1)][lastVisitedColumn.get(lastVisitedColumn.size()-1)] = false;
 				try{
 					col = lastVisitedColumn.get(lastVisitedColumn.size()-2);//catch less than size 1 exception
 					row = lastVisitedRow.get(lastVisitedRow.size()-2);
