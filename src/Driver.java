@@ -511,7 +511,7 @@ public class Driver extends Application{
 		root.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
 			System.out.println(ev.getCode());
 			if(ev.getCode().toString().equals("BACK_SPACE")){
-				if(word.size() == 1){
+				if(word.size() == 1 || (word.size() == 2 && !mustbe)){
 					cButton.fire();
 				}
 				else{
