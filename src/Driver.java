@@ -1,4 +1,4 @@
-import javafx.animation.Timeline;
+import javafx.animation.FadeTransition;
 import javafx.application.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,10 +14,13 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -32,6 +35,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Driver extends Application{
 	private int col = -1;
@@ -43,6 +48,8 @@ public class Driver extends Application{
 	private int height = 0;
 	private Button [][] defaults = new Button[4][4];
 	private String theRealOG = "";
+	private ArrayList<Integer> lastVisitedRow = new ArrayList<Integer>(/**Arrays.asList(-1)**/);
+	private ArrayList<Integer> lastVisitedColumn = new ArrayList<Integer>(/**Arrays.asList(-1)**/);
 	private ArrayList<String[]> from = new ArrayList<String[]>(Arrays.asList(new String[]{"A","A","E","E","G","N"}, 
 																			 new String[]{"A","B","B","J","O","O"},
 																			 new String[]{"A","C","H","O","P","S"},
@@ -59,6 +66,18 @@ public class Driver extends Application{
 																			 new String[]{"E","L","R","T","T","Y"},
 																			 new String[]{"H","I","M","N","U","QU"},
 																			 new String[]{"H","L","N","N","R","Z"}));
+	private static ArrayList<String> insults = new ArrayList<String>(Arrays.asList("Not a word.", 
+																					"Please try again.",
+																					"You're wearing my patience",
+																					"Do you even know how to play",
+																					"Do you even English bro? ",
+																					"Stupid.",
+																					"Much effort. No good. Such wow.",
+																					"Yo momma so stupid you can't Boggle",
+																					"Insert 2 dollars to continue.",
+																					"You suck.",
+																					"Too slow.",
+																					"I've already run out of insults"));
 	private boolean mustbe = true;
 	private DropShadow shadow = new DropShadow();
 	private Glow glow = new Glow(10);
@@ -75,7 +94,7 @@ public class Driver extends Application{
 		return temp;
 	}
 	
-	public static void lookUp(String s, Text f) throws IOException{
+	public static void lookUp(String s, Text f, FadeTransition a, Text m, FadeTransition b, Text plus) throws IOException{
 		boolean works = true;
 		
 		URL url = new URL("http://services.aonaware.com/DictService/Default.aspx?action=define&dict=*&query=" + s);
@@ -87,7 +106,19 @@ public class Driver extends Application{
         while ((line = wow.readLine()) != null) {
             System.out.println(line);
             if(line.contains("No definitions found")){
+            	m.setText(insults.get((int)(Math.random()*insults.size())));
+            	m.setVisible(true);
             	works = false;
+            	a.play();
+            	new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					m.setVisible(false);
+            				}
+            			}, 
+            			5000
+            	);
             	break;
             }
         }
@@ -96,18 +127,78 @@ public class Driver extends Application{
         	words.add(s);
         	if(s.length() >= 8){
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 11));
+        		plus.setText("+11");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			1000
+            	);
         	}
         	else if(s.length() == 7){
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 5));
+        		plus.setText("+5");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			1000
+            	);
         	}
         	else if(s.length() == 6){
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 3));
+        		plus.setText("+3");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			1000
+            	);
         	}
         	else if(s.length() == 5){
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 2));
+        		plus.setText("+2");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			1000
+            	);
         	}
         	else{
         		f.setText(String.valueOf(Integer.parseInt(f.getText()) + 1));
+        		plus.setText("+1");
+        		plus.setVisible(true);
+        		b.play();
+        		new Timer().schedule(
+            			new TimerTask(){
+            				@Override
+            				public void run(){
+            					plus.setVisible(false);
+            				}
+            			}, 
+            			1000
+            	);
         	}
         }
 	}
@@ -205,7 +296,7 @@ public class Driver extends Application{
 	
 	@Override
 	public void start(Stage thingy){
-		thingy.getIcons().add(new Image("http://queenbeecoupons.com/wp-content/uploads/2011/02/Boggle_app_icon.png"));
+		thingy.getIcons().add(new Image("file:not-giant-enough-letter-b.jpg"));
 		//why can't this be a part of the executable jar?
 		
 		ArrayList<String> word = new ArrayList<String>();
@@ -221,10 +312,36 @@ public class Driver extends Application{
 		scoret.setText("Score:");
 		tasks.getChildren().add(scoret);
 		
+		HBox scoreplus = new HBox(2);
 		Text score = new Text();
 		score.setText("0");
-		tasks.getChildren().add(score);
+		scoreplus.getChildren().add(score);
+		Text plus = new Text("");
+		plus.setVisible(false);
+		FadeTransition ft2 = new FadeTransition(Duration.millis(500));
+		ft2.setNode(plus);
+		ft2.setFromValue(0);
+		ft2.setToValue(1);
+		ft2.setCycleCount(1);
+		scoreplus.getChildren().add(plus);
+		tasks.getChildren().add(scoreplus);
 		
+		Text message = new Text();
+		message.setFont(Font.font("Verdana", 12));
+		message.setX(10);
+		message.setY(90);
+		message.setWrappingWidth(160);
+		message.setTextAlignment(TextAlignment.CENTER);
+		message.setVisible(false);
+		
+		FadeTransition ft = new FadeTransition(Duration.millis(2000));
+		ft.setNode(message);
+		ft.setFromValue(0);
+		ft.setToValue(1);
+		ft.setCycleCount(1);
+		//ft.play();
+		
+	
 		/**HBox cw = new HBox();
 		cw.setSpacing (10);**/
 		
@@ -257,21 +374,29 @@ public class Driver extends Application{
 					@Override
 					public void handle(ActionEvent event){
 						if(isNeighbor(button) && !visited[GridPane.getRowIndex(button)][GridPane.getColumnIndex(button)]){
-							word.add(button.getText());
+							if(isAlpha(button.getText()))
+								word.add(button.getText());
 							currword.setText(getString(word));
 							col = GridPane.getColumnIndex(button);
 							row = GridPane.getRowIndex(button);
+							lastVisitedColumn.add(col);
+							lastVisitedRow.add(row);
 							visited[row][col] = true;
 							colorSurrounds(row, col, pboard);
 						}
 						else if(col == -1 && row == -1){
-							word.add(button.getText());
+							if(isAlpha(button.getText()))
+								word.add(button.getText());
 							currword.setText(getString(word));
 							col = GridPane.getColumnIndex(button);
 							row = GridPane.getRowIndex(button);			
+							lastVisitedColumn.add(col);
+							lastVisitedRow.add(row);
 							visited[row][col] = true;
 							colorSurrounds(row, col, pboard);							
 						}
+						System.out.println(lastVisitedRow);
+						System.out.println(lastVisitedColumn);
 					}
 				});
 				width += 1;
@@ -299,7 +424,7 @@ public class Driver extends Application{
 				try {
 					if(getString(word).length() >= 3){
 						if(!words.contains(getString(word))){
-							lookUp(getString(word), score);
+							lookUp(getString(word), score, ft, message, ft2, plus);
 						}
 					}
 					else if(knowstheirstuff){
@@ -338,6 +463,8 @@ public class Driver extends Application{
 					row = -1;
 					clean(pboard);
 					resetTheNumberedOnes(pboard);
+					lastVisitedRow.clear();
+					lastVisitedColumn.clear();
 					mustbe = true;
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -351,6 +478,8 @@ public class Driver extends Application{
 		cButton.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event){
+				lastVisitedRow.clear();
+				lastVisitedColumn.clear();
 				word.clear();
 				currword.setText("[Nothing]");
 				score.setText("0");
@@ -372,13 +501,47 @@ public class Driver extends Application{
 		
 		tasks.getChildren().add(buttons);
 		
-		root.add(pboard, 0, 0);
+		
+		Pane pane = new Pane();
+		pane.getChildren().addAll(pboard, message);
+		
+		root.add(pane, 0, 0);
 		root.add(tasks, 1, 0);
 		
 		root.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
 			System.out.println(ev.getCode());
 			if(ev.getCode().toString().equals("BACK_SPACE")){
-				cButton.fire();
+				if(word.size() == 1 || (word.size() == 2 && !mustbe)){
+					cButton.fire();
+				}
+				else{
+				if(!mustbe){
+					word.remove(word.size()-1);
+					mustbe = true;
+				}
+				word.remove(word.size()-1);//catch 0 size exception
+				currword.setText(getString(word));
+				visited[lastVisitedRow.get(lastVisitedRow.size()-1)][lastVisitedColumn.get(lastVisitedColumn.size()-1)] = false;
+				try{
+					col = lastVisitedColumn.get(lastVisitedColumn.size()-2);//catch less than size 1 exception
+					row = lastVisitedRow.get(lastVisitedRow.size()-2);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+					System.out.println(lastVisitedColumn.get(lastVisitedColumn.size()-2));
+					System.out.println(lastVisitedRow.get(lastVisitedRow.size()-2));
+				}
+				lastVisitedRow.remove(lastVisitedRow.size()-1);
+				lastVisitedColumn.remove(lastVisitedColumn.size()-1);
+				/**lastVisitedColumn.remove(lastVisitedColumn.size()-1);
+				lastVisitedRow.remove(lastVisitedRow.size()-1);
+				visited[row][col] = true;**/
+				resetTheNumberedOnes(pboard);
+				colorSurrounds(row, col, pboard);//add clear to submit and clear buttons
+				
+				}
+				System.out.println(lastVisitedRow);
+				System.out.println(lastVisitedColumn);
 			}
 			else if(isAlpha(ev.getText()) && mustbe){
 				String a = ev.getText();
@@ -407,11 +570,12 @@ public class Driver extends Application{
 					if(Integer.parseInt(ev.getText()) > 0 && Integer.parseInt(ev.getText()) <= temp){
 						ArrayList<Node> stuff = getWorkingNodesByText(ev.getText(), pboard);
 						//word.add(theRealOG);
-						currword.setText(getString(word));
+						/**currword.setText(getString(word));
 						col = GridPane.getColumnIndex((Button)stuff.get(0));
 						row = GridPane.getRowIndex((Button)stuff.get(0));
-						visited[row][col] = true;
-						colorSurrounds(row, col, pboard);
+						visited[row][col] = true;**/
+						((Button)stuff.get(0)).fire();
+						//colorSurrounds(row, col, pboard);
 						resetTheNumberedOnes(pboard);
 						mustbe = true;
 						temp = 0;
@@ -423,14 +587,8 @@ public class Driver extends Application{
 				}
 			}
 		}
-		);
+		);		
 		
-		Text message = new Text("you suck");
-		
-		final Timeline timeline = new Timeline();
-		timeline.setCycleCount(Timeline.INDEFINITE);
-		timeline.setAutoReverse(true);
-		//asd;lkfja;sldkfja;sldfja;sldkfsdfas;dlfjas;ldfkjas;dlfkajsd;fkasdf;lasdjfaskdj
 		/**Group blended = new Group(message, root);
 		blended.setBlendMode(BlendMode.OVERLAY);
 		root.getChildren().add(blended);**/ //need to add sprite and fix
@@ -443,7 +601,7 @@ public class Driver extends Application{
 		thingy.setScene(scene);
 		thingy.show();
 		
-		Media music = new Media(new File("ReggieWatts.mp3").toURI().toString());
+		Media music = new Media(new File("ReggieWatts2.mp3").toURI().toString());
 		MediaPlayer mediaplayer = new MediaPlayer(music);
 		mediaplayer.setOnEndOfMedia(new Runnable(){
 			public void run(){
