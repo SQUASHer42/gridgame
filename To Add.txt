@@ -1,5 +1,7 @@
-To Add:
+#To Add:
 
+
+<<<<<<< HEAD
 Check text retroactively
 List of already discovered text
 Implement actual backspace button
@@ -7,3 +9,5 @@ Click through the insults
 Implement arrow functions
 
 What if they use keyboard and 1,2,3 doesn't work with click
+=======
+>>>>>>> dcf620523d3611da98f29c0852368055eb14a923
