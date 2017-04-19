@@ -395,6 +395,7 @@ public class Driver extends Application{
 							visited[row][col] = true;
 							colorSurrounds(row, col, pboard);							
 						}
+						resetTheNumberedOnes(pboard);
 						System.out.println(lastVisitedRow);
 						System.out.println(lastVisitedColumn);
 					}
